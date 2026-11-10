@@ -1,0 +1,38 @@
+ARG DEBIAN_RELEASE="trixie"
+FROM debian:${DEBIAN_RELEASE}
+
+ARG DEBIAN_RELEASE
+ARG OPENVOX_DEB="openvox8-release-debian13.deb"
+ARG FOREMAN_VERSION="5.0"
+
+#STOPSIGNAL SIGRTMIN+3
+RUN apt update && \
+    DEBIAN_FRONTEND=noninteractive apt install -y \
+        locales \
+        systemd \
+        systemd-sysv \
+        dbus \
+        dbus-user-session \
+        wget \
+        cron \
+        ca-certificates && \
+      echo en_US UTF-8 > /etc/locale.gen && \
+      locale-gen
+
+ENV LANG=en_US.UTF-8
+
+RUN cd /tmp && \
+    wget https://apt.voxpupuli.org/${OPENVOX_DEB} && \
+    DEBIAN_FRONTEND=noninteractive apt install -y /tmp/${OPENVOX_DEB} && \
+    rm /tmp/${OPENVOX_DEB} && \
+    wget https://deb.theforeman.org/foreman.asc -O /etc/apt/trusted.gpg.d/foreman.asc && \
+    echo deb http://deb.theforeman.org/ ${DEBIAN_RELEASE} ${FOREMAN_VERSION} > /etc/apt/sources.list.d/foreman.list && \
+    echo deb http://deb.theforeman.org/ plugins ${FOREMAN_VERSION} >> /etc/apt/sources.list.d/foreman.list && \
+    apt update && \
+    DEBIAN_FRONTEND=noninteractive apt install -y foreman-installer
+
+COPY --chmod=755 docker-entrypoint.sh /
+COPY --chmod=755 foreman-installer.sh /
+
+ENTRYPOINT [ "/docker-entrypoint.sh" ]
+CMD [ "/foreman-installer.sh" ]
