@@ -39,6 +39,17 @@ podman run \
     -ti foreman:noble
 ```
 
+## Additional installer arguments
+
+Additional `foreman-installer` arguments can be passed with `ADDITIONAL_INSTALLER_ARGS`, e.g. for enabling the HDM integration.
+
+```sh
+podman run \
+    ...
+    -e ADDITIONAL_INSTALLER_ARGS='--enable-foreman-plugin-hdm --enable-foreman-proxy-plugin-hdm --foreman-proxy-plugin-hdm-hdm-url <hdm-url> --foreman-proxy-plugin-hdm-hdm-user <hdm-api-user> --foreman-proxy-plugin-hdm-hdm-password <hdm-api-user-password>' \
+    ...
+```
+
 ## Accessing the Foreman server
 
 Access Foreman server using a web browser pointed to https://localhost:9443
