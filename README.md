@@ -9,8 +9,8 @@ podman build . -t foreman:trixie -f Containerfile.trixie
 ```
 ```sh
 podman run \
-    -p9443:443 \
-    -p8443:8443 \
+    -p 9443:443 \
+    -p 8443:8443 \
     --tmpfs /tmp \
     --tmpfs /run \
     --tmpfs /run/lock \
@@ -27,8 +27,8 @@ podman build . -t foreman:noble -f Containerfile.noble
 ```
 ```sh
 podman run \
-    -p9443:443 \
-    -p8443:8443 \
+    -p 9443:443 \
+    -p 8443:8443 \
     --tmpfs /tmp \
     --tmpfs /run \
     --tmpfs /run/lock \
@@ -75,3 +75,39 @@ Success!
       Initial credentials are admin / Lhnp2hojS2xDh6DX
   * Foreman Proxy is running at https://foreman.example.com:8443
 ```
+
+## Connect Foreman to HDM
+
+Create a `bridge` network which will connect HDM and Foreman
+
+```sh
+podman network create foreman
+```
+
+Start Hiera Data Manager (HDM)
+
+```sh
+podman run \
+    -p 3000:3000 \
+    -e DEVELOP=1 \
+    -e SECRET_KEY_BASE=$(openssl rand -hex 16) \
+    -it -d \
+    --network foreman \
+    --name hdm \
+    ghcr.io/betadots/hdm:development
+```
+
+The HDM web ui will be accessible from http://localhost:3000 and from inside the `foreman` network using http://hdm:3000
+
+After setting up an API user in HDM, e.g. `api` / `64b5199d6ee90fd1409ec8d45fb12f24` , you can run Foreman
+
+```sh
+podman run \
+    ...
+    --network foreman \
+    -e FOREMAN_ADDITIONAL_INSTALLER_ARGS='--enable-foreman-plugin-hdm --enable-foreman-proxy-plugin-hdm --foreman-proxy-plugin-hdm-hdm-url http://hdm:3000 --foreman-proxy-plugin-hdm-hdm-user api --foreman-proxy-plugin-hdm-hdm-password 64b5199d6ee90fd1409ec8d45fb12f24' \
+    ...
+```
+When set up properly, the **Smart Proxies** overview should show `Hdm` listed under **Active features**
+
+![Foreman Smart Proxies](doc/images/foreman_smart-proxies.png)
