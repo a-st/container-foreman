@@ -39,14 +39,27 @@ podman run \
     -ti foreman:noble
 ```
 
+## Installer arguments
+
+The `foreman-installer` gets started with a couple of arguments which can be modified using environment variables.
+
+| Variable                           | Default | Description                                                                                         |
+| :--------------------------------- | :-----: | :-------------------------------------------------------------------------------------------------- |
+| FOREMAN_LOG_LEVEL                  | notice  | Log level for log based terminal output. The available levels are ERROR, WARN, NOTICE, INFO, DEBUG. |
+| FOREMAN_DB_POOL                    | 50      | Size of database connection pool                                                                    |
+| FOREMAN_DYNFLOW_WORKER_INSTANCES   | 1       | The number of worker instances that should be running                                               |
+| FOREMAN_DYNFLOW_WORKER_CONCURRENCY | 1       | How many concurrent jobs to handle per worker instance                                              |
+| FOREMAN_SERVICE_PUMA_WORKERS       | 1       | Number of workers for Puma.                                                                         |
+| FOREMAN_SERVICE_PUMA_THREADS_MAX   | 1       | Maximum number of threads for every Puma worker                                                     |
+| FOREMAN_ADDITIONAL_INSTALLER_ARGS  |         | Additional installer arguments                                                                      |
 ## Additional installer arguments
 
-Additional `foreman-installer` arguments can be passed with `ADDITIONAL_INSTALLER_ARGS`, e.g. for enabling the HDM integration.
+Additional `foreman-installer` arguments can be passed with `FOREMAN_ADDITIONAL_INSTALLER_ARGS`, e.g. for enabling the HDM integration.
 
 ```sh
 podman run \
     ...
-    -e ADDITIONAL_INSTALLER_ARGS='--enable-foreman-plugin-hdm --enable-foreman-proxy-plugin-hdm --foreman-proxy-plugin-hdm-hdm-url <hdm-url> --foreman-proxy-plugin-hdm-hdm-user <hdm-api-user> --foreman-proxy-plugin-hdm-hdm-password <hdm-api-user-password>' \
+    -e FOREMAN_ADDITIONAL_INSTALLER_ARGS='--enable-foreman-plugin-hdm --enable-foreman-proxy-plugin-hdm --foreman-proxy-plugin-hdm-hdm-url <hdm-url> --foreman-proxy-plugin-hdm-hdm-user <hdm-api-user> --foreman-proxy-plugin-hdm-hdm-password <hdm-api-user-password>' \
     ...
 ```
 
