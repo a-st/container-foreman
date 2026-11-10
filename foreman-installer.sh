@@ -20,6 +20,8 @@ log-and-run foreman-installer \
     --foreman-dynflow-worker-concurrency ${FOREMAN_DYNFLOW_WORKER_CONCURRENCY} \
     --foreman-foreman-service-puma-workers ${FOREMAN_SERVICE_PUMA_WORKERS} \
     --foreman-foreman-service-puma-threads-max ${FOREMAN_SERVICE_PUMA_THREADS_MAX} \
+    --enable-foreman-plugin-openbolt \
+    --enable-foreman-proxy-plugin-openbolt \
     ${FOREMAN_ADDITIONAL_INSTALLER_ARGS}
 
 exec /bin/bash

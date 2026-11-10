@@ -29,7 +29,7 @@ RUN cd /tmp && \
     echo deb http://deb.theforeman.org/ ${DEBIAN_RELEASE} ${FOREMAN_VERSION} > /etc/apt/sources.list.d/foreman.list && \
     echo deb http://deb.theforeman.org/ plugins ${FOREMAN_VERSION} >> /etc/apt/sources.list.d/foreman.list && \
     apt update && \
-    DEBIAN_FRONTEND=noninteractive apt install -y foreman-installer
+    DEBIAN_FRONTEND=noninteractive apt install -y foreman-installer openbolt
 
 COPY --chmod=755 docker-entrypoint.sh /
 COPY --chmod=755 foreman-installer.sh /
