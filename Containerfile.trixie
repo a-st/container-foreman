@@ -5,7 +5,7 @@ ARG DEBIAN_RELEASE
 ARG OPENVOX_DEB="openvox8-release-debian13.deb"
 ARG FOREMAN_VERSION="5.0"
 
-#STOPSIGNAL SIGRTMIN+3
+STOPSIGNAL SIGRTMIN+3
 RUN apt update && \
     DEBIAN_FRONTEND=noninteractive apt install -y \
         locales \
@@ -16,8 +16,8 @@ RUN apt update && \
         wget \
         cron \
         ca-certificates && \
-      echo en_US UTF-8 > /etc/locale.gen && \
-      locale-gen
+    echo en_US UTF-8 > /etc/locale.gen && \
+    locale-gen
 
 ENV LANG=en_US.UTF-8
 
